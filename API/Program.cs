@@ -15,6 +15,20 @@ builder.Services.AddDbContext<DataContext>(opts =>
     opts.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+/*   All CORS request from our React App   */
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("CorsPolicy", policy =>
+    {
+        /*
+        Don't care about header.
+        Don't care about method (GET/POST/PUT//DELETE).
+        Okay as long as it comes from the mentioned origin.
+        */
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +37,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
