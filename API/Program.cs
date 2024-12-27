@@ -1,3 +1,4 @@
+using API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -7,27 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<DataContext>(opts =>
-{
-    opts.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-/*   All CORS request from our React App   */
-builder.Services.AddCors(opts =>
-{
-    opts.AddPolicy("CorsPolicy", policy =>
-    {
-        /*
-        Don't care about header.
-        Don't care about method (GET/POST/PUT//DELETE).
-        Okay as long as it comes from the mentioned origin.
-        */
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-    });
-});
+builder.Services.AdApplicationService(builder.Configuration);
 
 var app = builder.Build();
 
